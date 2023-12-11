@@ -35,7 +35,9 @@ local TableValue = {}
 		print(key, new, old)
 	end
 
-	person.age += 10 -- print('age', 10, 9)
+	person.age += 1 -- print('age', 10, 9)
+
+	person.Value.age += 1 -- No callback fires, this is how you can perform silent changes!
 	```
 
 	If the callback doesn't suit your fancy, you can make a small wrapper for it to use a signal instead!
@@ -63,6 +65,8 @@ local TableValue = {}
 	end)
 
 	person.age += 10 -- print('age', 10, 9)
+
+	person.Value.age += 1 -- No event fires, this is how you can perform silent changes!
 	```
 ]=]
 function TableValue.new<T>(tab: T)
