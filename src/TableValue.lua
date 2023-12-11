@@ -17,7 +17,7 @@ end
 local TableValue = {}
 
 function TableValue.new<T>(tab: T)
-	local self = {} :: T & { Value: T, Changed: (any, any, any) -> () }
+	local self = {} :: T & { Value: T, Changed: typeof(nop) }
 	self.Value = tab
 	self.Changed = nop
 	return setmetatable(self, meta)
