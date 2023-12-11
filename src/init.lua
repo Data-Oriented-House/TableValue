@@ -7,7 +7,7 @@ local meta = {}
 function meta.__newindex(t, k, v)
 	local old = t.Value[k]
 	t.Value[k] = v
-	t.Changed:Fire(k, v, old)
+	t.Changed(k, v, old)
 end
 
 function meta.__index(t, k)
@@ -48,7 +48,7 @@ local TableValue = {}
 
 		self.Signal = Signal.new()
 
-		function self.Callback(key, new, old)
+		function self.Changed(key, new, old)
 			self.Signal:Fire(key, new, old)
 		end
 
