@@ -6,7 +6,7 @@ sidebar_position: 1
 
 ## Manually
 
-1. Copy the source code from [src/init.lua](/src/init.lua)
+1. Copy the source code from [src/init.lua](https://github.com/Data-Oriented-House/TableValue/blob/main/src/init.lua)
 2. Paste it into a ModuleScript or file
 
 ## Wally Package Manager
