@@ -25,6 +25,8 @@ local TableValue = {}
 
 	Returns a new proxy table to interface with the `.Value` table. Does not modify the `.Value` table or its metatable.
 
+	The callback is optional, if it is defined it will automatically update the fields in the table at initialization.
+
 	```lua
 	local person = TableValue.new {
 		name = 'Jim',
@@ -40,6 +42,24 @@ local TableValue = {}
 
 	person.Value.age += 1
 	-- No callback fires, this is how you can perform silent changes!
+
+	local monster = TableValue.new({
+		type = 'large',
+		health = 100,
+		secret = 'Loves chocolate'
+	}, function(key: string, new, old)
+		print(key, new, old)
+	end)
+	-- print('health', 100, nil)
+	-- print('type', "large", nil)
+	-- print('secret', 'Loves chocolate', nil)
+
+	monster.health -= 10
+	-- print('health', 90, 100)
+
+	monster.Value.secret ..= ' but is lactose intolerant'
+	-- No callback fires, this is how you can perform silent changes!
+
 	```
 
 	If the callback doesn't suit your fancy, you can make a small wrapper for it to use a signal instead!
@@ -73,10 +93,18 @@ local TableValue = {}
 	-- No event fires, this is how you can perform silent changes!
 	```
 ]=]
-function TableValue.new<T>(tab: T)
+function TableValue.new<T>(tab: T, changed: (key: any, new: any, old: any) -> ()?)
 	local self = {} :: T & { Value: T, Changed: typeof(nop) }
 	self.Value = tab
-	self.Changed = nop
+
+	if changed then
+		self.Changed = changed
+		for key, value in tab do
+			changed(key, value, nil)
+		end
+	else
+		self.Changed = nop
+	end
 	return setmetatable(self, meta)
 end
 
