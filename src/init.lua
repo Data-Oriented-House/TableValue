@@ -96,16 +96,18 @@ local TableValue = {}
 function TableValue.new<T>(tab: T, changed: (key: any, new: any, old: any) -> ()?)
 	local self = {} :: T & { Value: T, Changed: typeof(nop) }
 	self.Value = tab
+	self.Changed = nop
+
+	setmetatable(self, meta)
 
 	if changed then
 		self.Changed = changed
 		for key, value in tab do
 			changed(key, value, nil)
 		end
-	else
-		self.Changed = nop
 	end
-	return setmetatable(self, meta)
+
+	return self
 end
 
 --[=[
