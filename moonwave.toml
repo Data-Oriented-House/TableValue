@@ -8,6 +8,9 @@ changelog = true
 enabled = true
 includeReadme = false
 
+[navbar.logo]
+src = "/favicon.ico"
+
 [[home.features]]
 title = ""
 
