@@ -7,7 +7,7 @@ local meta = {}
 function meta.__newindex(t, k, v)
 	local old = t.Value[k]
 	t.Value[k] = v
-	t.Changed(k, v, old)
+	t.Changed(t, k, v, old)
 end
 
 function meta.__index(t, k)
@@ -33,8 +33,8 @@ local TableValue = {}
 		age = 9,
 	}
 
-	function person.Changed(key: string, new, old)
-		print(key, new, old)
+	function person.Changed(tab, key: string, new, old)
+		print(tab, key, new, old)
 	end
 
 	person.age += 1
@@ -47,8 +47,8 @@ local TableValue = {}
 		type = 'large',
 		health = 100,
 		secret = 'Loves chocolate'
-	}, function(key: string, new, old)
-		print(key, new, old)
+	}, function(tab, key: string, new, old)
+		print(tab, key, new, old)
 	end)
 	-- print('health', 100, nil)
 	-- print('type', "large", nil)
@@ -70,7 +70,7 @@ local TableValue = {}
 
 		self.Signal = Signal.new()
 
-		function self.Changed(key, new, old)
+		function self.Changed(tab, key, new, old)
 			self.Signal:Fire(key, new, old)
 		end
 
@@ -93,7 +93,7 @@ local TableValue = {}
 	-- No event fires, this is how you can perform silent changes!
 	```
 ]=]
-function TableValue.new<T>(tab: T, changed: (key: any, new: any, old: any) -> ()?)
+function TableValue.new<T>(tab: T, changed: (tab: T, key: any, new: any, old: any) -> ()?)
 	local self = {} :: T & { Value: T, Changed: typeof(nop) }
 	self.Value = tab
 	self.Changed = nop
@@ -103,7 +103,7 @@ function TableValue.new<T>(tab: T, changed: (key: any, new: any, old: any) -> ()
 	if changed then
 		self.Changed = changed
 		for key, value in tab do
-			changed(key, value, nil)
+			changed(self, key, value, nil)
 		end
 	end
 
@@ -118,7 +118,7 @@ end
 	```lua
 	local myArray = TableValue.new {}
 
-	function myArray.Changed(index, value)
+	function myArray.Changed(_, index, value)
 		print(index, value)
 	end
 
@@ -153,7 +153,7 @@ end
 	```lua
 	local myArray = TableValue.new { 3, 'hi', Vector3.zero }
 
-	function myArray.Changed(index, value)
+	function myArray.Changed(_, index, value)
 		print(index, value)
 	end
 
