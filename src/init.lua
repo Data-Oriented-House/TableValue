@@ -14,6 +14,17 @@ function meta.__index(t, k)
 	return t.Value[k]
 end
 
+
+function meta.__len(t)
+	return #t.Value
+end
+
+
+function meta.__iter(t)
+	return next, t.value
+end
+
+
 --[=[
 	@class TableValue
 ]=]
