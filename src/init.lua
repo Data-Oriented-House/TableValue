@@ -21,7 +21,7 @@ end
 
 
 function meta.__iter(t)
-	return next, t.value
+	return next, t.Value
 end
 
 
